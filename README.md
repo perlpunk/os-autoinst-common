@@ -57,6 +57,76 @@ them and then do:
 
     % git subrepo push ext/os-autoinst-common
 
+### Possible Workflows
+
+One can make changes to the subrepo directly from the host repo, but there are
+different strategies.
+
+#### Make changes in host repo first and push after approval
+
+* Create a branch in the host repo
+* Make changes in the subrepo directory
+* Create PR
+* After approval, merge and push changes to subrepo
+
+
+Prepare:
+
+    % git checkout -b feature1
+    # Pull subrepo changes first to avoid merges later
+    % git subrepo pull external/os-autoinst-common
+    # This will create a commit automatically if there are any changes
+    # If there are functional changes, it might be good to do this in an extra
+    # PR first
+
+Make changes:
+
+    % touch external/os-autoinst-common/foo
+    % git add .
+    % git commit
+    % git push -u fork feature1
+    # Create PR
+
+When the PR is merged, push the changes directly to the subrepo master if you
+have the allowance.
+
+Check if there were any changes in the subrepo in the meantime with
+
+    % git subrepo pull external/os-autoinst-common
+
+Push:
+
+    % git subrepo push external/os-autoinst-common
+
+#### Make changes in a subrepo fork/branch
+
+This will allow to test the PR in several host repos.
+
+First create a branch in your `os-autoinst-common` fork (or in `origin`, if ok).
+
+    % cd /path/to/os-autoinst-common
+    % git pull
+    % git checkout -b feature1
+    % git push -u fork feature1
+
+Make changes in the host repo, e.g. `openQA`:
+
+    % cd /path/to/openQA
+    % git checkout -b feature1
+    % git subrepo clone -f git@url-to-your-fork -b feature1
+    % touch external/os-autoinst-common/foo
+    % git add .
+    % git commit
+    % git subrepo push external/os-autoinst-common
+    % git push -u fork feature1
+    # Create WIP openQA PR to test the changes
+    # Create os-autoinst-common PR
+
+When the `os-autoinst-common` PR is merged, just reset your `openQA` `feature1`
+branch to master and do
+
+    % git subrepo pull external/os-autoinst-common
+
 ## git-subrepo
 
 You can find more information here:
