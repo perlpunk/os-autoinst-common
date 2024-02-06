@@ -1,0 +1,19 @@
+---
+name: Perl tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  authortests:
+    runs-on: ubuntu-latest
+    name: Perl
+    container:
+      image: perldocker/perl-tester
+    steps:
+      - uses: actions/checkout@v4
+      - run: prove xt
+
