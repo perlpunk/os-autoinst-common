@@ -23,7 +23,7 @@ test-tidy:
 
 .PHONY: test-critic
 test-critic:
-	tools/perlcritic --quiet .
+	tools/perlcritic .
 
 .PHONY: test-yaml
 test-yaml:
